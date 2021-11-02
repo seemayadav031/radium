@@ -1,1 +1,142 @@
-hello
+
+tech@tech-PC MINGW32 /g/FunctionUp
+$ cd ..
+
+tech@tech-PC MINGW32 /g
+$ mkdir assignment
+
+tech@tech-PC MINGW32 /g
+$ cd assignment
+
+tech@tech-PC MINGW32 /g/assignment
+$ mkdir source
+
+tech@tech-PC MINGW32 /g/assignment
+$ mkdir destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd source
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ touch content.txt
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ cat >content.txt
+This is the content of source file.
+tech@tech-PC MINGW32 /g/assignment/source
+$ cat content.txt
+This is the content of source file.
+tech@tech-PC MINGW32 /g/assignment/source
+$ cp g/assignment/source/content.txt g/assignment/destination/
+cp: cannot stat 'g/assignment/source/content.txt': No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ cp content.txt destination
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ cd ..
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd destination/
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ ls
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ cd ..
+
+tech@tech-PC MINGW32 /g/assignment
+$ cp /source/content.txt destination/
+cp: cannot stat '/source/content.txt': No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment
+$ cp /source/content.txt destination/content.txt
+cp: cannot stat '/source/content.txt': No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment
+$ cp /source/content.txt /destination/content.txt
+cp: cannot stat '/source/content.txt': No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment
+$ cp source/content.txt destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd destination
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ ls
+content.txt
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ rm -r destination
+rm: cannot remove 'destination': No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ cd ..
+
+tech@tech-PC MINGW32 /g/assignment
+$ rm -r destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd destination
+bash: cd: destination: No such file or directory
+
+tech@tech-PC MINGW32 /g/assignment
+$ mkdir destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cp source/content.txt destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd destination
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ ls
+content.txt
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ rm content.txt
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ ls
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ cd ..
+
+tech@tech-PC MINGW32 /g/assignment
+$ ls
+destination  source
+
+tech@tech-PC MINGW32 /g/assignment
+$ mv source/content.txt destination
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd source
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ ls
+destination
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ rm destination
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ ls
+
+tech@tech-PC MINGW32 /g/assignment/source
+$ cd ..
+
+tech@tech-PC MINGW32 /g/assignment
+$ cd destination
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ ls
+content.txt
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$ grep -i 'functionup' content.txt
+functionup is a bootcamp
+functionup
+
+tech@tech-PC MINGW32 /g/assignment/destination
+$
