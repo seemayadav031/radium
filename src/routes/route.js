@@ -189,6 +189,64 @@ router.get('/best-movies', function (req, res){
 });
 
 
+//<---------------DATE 13NOV2021-------------->
+//<---------------LONG ASSIGNMENT ON GET AND POST------------->
+
+//PROBLEM 1---->Make players collection
+
+let playerArray=[]
+router.post('/players', function(req, res){
+   let playerAdd=req.body
+   for(let i=0;i<playerArray.length;i++){
+       if(playerArray[i].name==playerAdd.name){
+           res.send({"msg":"Player already exist"});
+       }
+   }
+   playerArray.push(playerAdd)
+   res.send({"msg":"Player added succesfully"})
+
+});
+
+//PROBLEM 2----->BOOKING IN PLAYER COLLECTION
+
+let playersArray=[{
+    "name":"manish",
+    "dob":"1/1/1995",
+    "gender":"male",
+    "city":"jalandhar",
+    "sports":["swimming"],
+    "booking":[]
+},
+{
+    "name":"seema",
+    "dob":"3/2/2000",
+    "gender":"female",
+    "city":"vanaras",
+    "sports":["kho kho"],
+    "booking":[]
+}]
+
+router.post('/players/:playerName/bookings/:bookingId', function(req, res){
+   
+       let checkName=req.params.playerName
+       let checkId=req.params.bookingId
+       let bookingDetails=req.body
+       for(let i=0;i<playersArray.length;i++){
+           if(playersArray[i].name==checkName){
+
+               for(let j=0;j<playersArray[i].booking.length;j++){
+                   if(playersArray[i].booking[j].bookingNumber==checkId){
+                       res.send({"msg":"Booking already processed"})
+                   }
+               }
+               playersArray[i].booking.push(bookingDetails)
+               res.send({"msg":"Booking Done"})   
+           }
+       }
+
+       res.send({"msg":"Player not found"})
+});
+
 
 
 
