@@ -27,7 +27,10 @@ const bookSchema= new mongoose.Schema({
         
     },
     totalPages: Number,
-    stockAvailable: Boolean,
+    stockAvailable: {
+        type:Boolean,
+        default:false
+    }
     
 
 }, {timestamps: true} )
