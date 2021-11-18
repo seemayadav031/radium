@@ -1,5 +1,6 @@
 const authorModel= require("../models/authorModel.js")
 
+//problem 1
 const createAuthor= async function (req, res) {
     var data= req.body
     let savedData= await authorModel.create(data)
