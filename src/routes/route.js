@@ -10,13 +10,13 @@ router.get('/test-me', function (req, res) {
 });
 
 // Authors API
-router.post('/authors',  authorController.createAuthor  );
-router.get('/authors',  authorController.getAuthors  );
+router.post('/createAuthors',  authorController.createAuthor  );
+router.get('/getAuthors',  authorController.getAuthors  );
 
 // Books API
-router.post('/books',  BookController.createBook  );
-router.get('/books',  BookController.getBooks  );
-router.get('/book',  BookController.getBook  );
+router.post('/createBook',  BookController.createBook  );
+router.get('/getBooks',  BookController.getBooks  );
+
 
 
 module.exports = router;
