@@ -26,7 +26,7 @@ const createBook = async function (req, res) {
 
 //problem 3 and 5
 const getBooks = async function (req, res) {
-  let allBooks = await bookModel.find().populate('author',["authorName" , "age"] );
+  let allBooks = await bookModel.find().populate('author',["authorName","age"]);
   res.send({ msg: allBooks });
 };
 
