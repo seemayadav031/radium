@@ -1,26 +1,28 @@
 const express = require('express');
 const router = express.Router();
 
-const authorController= require("../controllers/authorController")
-const BookController= require("../controllers/bookController")
-const publisherController= require("../controllers/publisherController")
+const OrderController= require("../controllers/orderController")
+const userController= require("../controllers/userController")
+const productController= require("../controllers/poductController")
+
+const commonMW= require("../Middleware/commonMiddleware")
 
 
 router.get('/test-me', function (req, res) {
     res.send('My first ever api!')
 });
 
-// Authors API
-router.post('/createAuthors',  authorController.createAuthor  );
-router.get('/getAuthors',  authorController.getAuthors  );
+// Order API
+router.post('/createOrder', commonMW.mid1, OrderController.createOrder );
+router.get('/getOrder',  OrderController.getOrder  );
 
-// Books API
-router.post('/createBook',  BookController.createBook  );
-router.get('/getBooks',  BookController.getBooks  );
+// User API
+router.post('/createUser', commonMW.mid1, userController.createUser  );
+router.get('/getUser',  userController.getUser  );
 
-//Publisher API
-router.post('/createPublisher',  publisherController.createPublisher  );
-router.get('/getPublishers',  publisherController.getPublishers  );
+//Product API
+router.post('/createProduct',  productController.createProduct  );
+router.get('/getProduct',  productController.getProduct  );
 
 
 
