@@ -1,6 +1,6 @@
 const productModel= require("../models/productModel.js")
 
-//problem 4
+//problem 1
 const createProduct= async function (req, res) {
     var data= req.body
     let savedData= await productModel.create(data)

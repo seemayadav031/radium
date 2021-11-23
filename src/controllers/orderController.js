@@ -21,9 +21,10 @@ const createOrder = async function (req, res) {
                     
                     if (uId["balance"] >= pId["price"]){
                         let updateBalance = uId["balance"] - pId["price"];
-                       let use=await userModel.find({_id:userWithId}).update({balance:updateBalance,})
+                        await userModel.find({_id:userWithId}).update({balance:updateBalance,})
                         order["amount"] = pId["price"];
-                        order["isFreeAppUser"] = req.headers["isfreeapp"];
+                        //order["isFreeAppUser"] = req.headers["isfreeapp"];
+                        order["isFreeAppUser"]=req.isFreeAppUser;
                         order["date"]=new Date()
                         let savedOrder = await orderModel.create(order);
                         res.send({ msg: savedOrder });
@@ -32,7 +33,8 @@ const createOrder = async function (req, res) {
                     }
                 } else {
                     order["amount"] = 0;
-                    order["isFreeAppUser"] = req.headers["isfreeapp"];
+                    //order["isFreeAppUser"] = req.headers["isfreeapp"];
+                    order["isFreeAppUser"]=req.isFreeAppUser;
                     order["date"]=new Date()
                     let savedOrder = await orderModel.create(order);
                     res.send({ msg: savedOrder });
