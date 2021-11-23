@@ -1,11 +1,16 @@
-const mid1= function (req, res, next) {
+const jwt = require("jsonwebtoken");
 
-    if(req.headers["isfreeapp"]!= null){
-        //update
-        req.isFreeAppUser=req.headers["isfreeapp"]//this req.isFreeAppUser become global
-    next()
+const checkAuthentication= function (req, res, next) {
+    let token=req.headers["x-auth-token"]
+    if(token!= null){
+        let decodedToken=jwt.verify(token,"radium")
+        if(decodedToken){
+                next()
+        }else{
+            res.send({msg:"token is not verified"})
+        }
     }else{
-        res.send({msg:"request is missing a mandatory header"})
+        res.send({msg:"request is missing a mandatory token header"})
     } 
 
 }
@@ -13,4 +18,4 @@ const mid1= function (req, res, next) {
 
 
 
-module.exports.mid1= mid1
+module.exports.checkAuthentication= checkAuthentication
