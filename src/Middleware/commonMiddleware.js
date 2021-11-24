@@ -5,6 +5,7 @@ const checkAuthentication= function (req, res, next) {
     if(token!= null){
         let decodedToken=jwt.verify(token,"radium")
         if(decodedToken){
+                req.validToken=decodedToken
                 next()
         }else{
             res.send({msg:"token is not verified"})
