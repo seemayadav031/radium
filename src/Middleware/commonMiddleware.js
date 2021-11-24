@@ -1,18 +1,22 @@
 const jwt = require("jsonwebtoken");
 
 const checkAuthentication= function (req, res, next) {
+    try{
     let token=req.headers["x-auth-token"]
-    if(token!= null){
+    if(token){
         let decodedToken=jwt.verify(token,"radium")
         if(decodedToken){
                 req.validToken=decodedToken
                 next()
         }else{
-            res.send({msg:"token is not verified"})
+            res.status(401).send({msg:"token is not verified"})
         }
     }else{
-        res.send({msg:"request is missing a mandatory token header"})
-    } 
+        res.status(401).send({status:false,msg:"request is missing a mandatory token header"})
+    }
+}catch(error){
+    res.status(500).send({status:false, msg:error.message})
+} 
 
 }
 

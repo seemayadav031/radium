@@ -5,13 +5,18 @@ const jwt = require("jsonwebtoken");
 
 //PROBLEM 1-REGISTER USER
 const createUser = async function (req, res) {
+  try{
   let data = req.body
   let savedData = await userModel.create(data)
-  res.send({ msg: savedData })
+  res.status(201).send({status:true, msg: savedData })
+  }catch(error){
+    res.status(500).send({status:false, msg:error.message})
+  }
 };
 
 //PROBLEM 2-LOGIN USER
 const login = async function (req, res) {
+  try{
   let userName = req.body.userName
   let password = req.body.password
 
@@ -20,41 +25,52 @@ const login = async function (req, res) {
   if (credentials) {
     let payload = { _id: credentials._id }
     let token = jwt.sign(payload, "radium")
-    res.send({ status: true, data: credentials._id, token: token })
+    res.status(200).send({ status: true, data: credentials._id, token: token })
   } else {
-    res.send({ msg: "user name not found" })
+    res.status(400).send({ msg: "Invalid credentials " })
   }
+}catch(error){
+  res.status(500).send({status:false, msg:error.message})
+}
 };
 
 //PROBLEM 3-GET USER DETAILS (PROTECTED API)
 const users = async function (req, res) {
+  try{
   let userId = req.params.userId
   if (req.validToken._id == userId) {
     let userDetails = await userModel.findOne({ _id: userId, isDeleted: false })
     if (userDetails) {
-      res.send({ status: true, msg: userDetails })
+      res.status(200).send({ status: true, msg: userDetails })
     } else {
-      res.send({ status: false, msg: "userid not valid" })
+      res.status(404).send({ status: false, msg: "user not found" })
     }
-  } else {
-    res.send({ msg: "invalid Token" })
+   } else {
+     res.status(403).send({status: false, msg: "prohibited ,token id and user id didn't match" })
+   }
+  }catch(error){
+    res.status(500).send({status:false, msg:error.message})
   }
 };
 
 //PROBLEM 4-UPDATE EMAIL (PROTECTED API) 
 const updateUser = async function (req, res) {
+  try{
   let userId = req.params.userId
   let email = req.body.email
   if (req.validToken._id == userId) {
     let userDetails = await userModel.findOneAndUpdate({ _id: userId, isDeleted: false }, { email: email }, { new: true })
     if (userDetails) {
-      res.send({ status: true, msg: userDetails })
+      res.status(200).send({ status: true, msg: userDetails })
     } else {
-      res.send({ status: false, msg: "userid not valid" })
+      res.status(404).send({ status: false, msg: "user not found" })
     }
   } else {
-    res.send({ msg: "invalid Token" })
+    res.status(403).send({ status:false,msg: "prohibited ,token id and user id didn't match" })
   }
+}catch(error){
+  res.status(500).send({status:false, msg:error.message})
+}
 };
 
 //-------------------------------------------------------------------------------------------
