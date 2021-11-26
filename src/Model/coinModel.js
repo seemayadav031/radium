@@ -4,11 +4,11 @@ const coinSchema= new mongoose.Schema({
 
     symbol: {
         type: String,
-        unique: false
+        unique:true
     },
     name: {
         type: String,
-        unique: false
+        unique: true
     },
    
     marketCapUsd:String,
