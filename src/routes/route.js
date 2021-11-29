@@ -1,27 +1,30 @@
 const express = require('express');
 const router = express.Router();
 
-const authorController= require("../controllers/authorController")
-const BookController= require("../controllers/bookController")
-const publisherController= require("../controllers/publisherController")
+const AuthorController= require("../controllers/authorController")
+const BlogController= require("../controllers/blogController")
+const middleware= require("../middlewares/middleware")
+//----------------------------mini project--------------------------------------------------------
 
-
-router.get('/test-me', function (req, res) {
-    res.send('My first ever api!')
-});
-
-// Authors API
-router.post('/createAuthors',  authorController.createAuthor  );
-router.get('/getAuthors',  authorController.getAuthors  );
-
-// Books API
-router.post('/createBook',  BookController.createBook  );
-router.get('/getBooks',  BookController.getBooks  );
-
-//Publisher API
-router.post('/createPublisher',  publisherController.createPublisher  );
-router.get('/getPublishers',  publisherController.getPublishers  );
-
-
+//----------------------API--------------------------------
+router.post('/createAuthor', middleware.validation,AuthorController.createAuthor);
+router.post('/blogs',  BlogController.createBlogs );
+router.get('/blogs',  BlogController.getBlogs );
+router.put('/blogs/:blogId',  BlogController.getBlogs );
+router.delete('/blogs/:blogId',  BlogController.deleteBlogsWithId );
+router.delete('/blogs',  BlogController.deleteBlogsWithQuery );
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------------
+

@@ -10,8 +10,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const mongoose = require('mongoose')
 
-mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/seema_yadav-database?retryWrites=true&w=majority", {useNewUrlParser: true})
-    .then(() => console.log('mongodb running and connected'))
+// mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/seema_yadav-database?retryWrites=true&w=majority", {useNewUrlParser: true})
+//     .then(() => console.log('mongodb running and connected'))
+//     .catch(err => console.log(err))
+
+mongoose.connect("mongodb+srv://users-open-to-all:hiPassword123@cluster0.uh35t.mongodb.net/TEAM-IRS-DB?retryWrites=true&w=majority", {useNewUrlParser: true})
+    .then(() => console.log('mongodb running on 27017'))
     .catch(err => console.log(err))
 
 app.use('/', route);
