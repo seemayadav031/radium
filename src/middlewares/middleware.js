@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+//const jwt = require("jsonwebtoken");
 
 const validation = async function(req,res,next){
     let data = req.body.email

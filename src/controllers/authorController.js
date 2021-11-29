@@ -56,10 +56,10 @@ module.exports.createAuthor= createAuthor
 // }
 
 
-// const getAuthors= async function (req, res) {
-//     let allAuthors= await authorModel.find()
-//     res.send({data: allAuthors})
-// }
+const getAuthors= async function (req, res) {
+    let allAuthors= await AuthorModel.find()
+    res.send({data: allAuthors})
+}
 
 // module.exports.createAuthor= createAuthor
-// module.exports.getAuthors= getAuthors
+ module.exports.getAuthors= getAuthors
