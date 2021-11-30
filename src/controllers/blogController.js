@@ -54,7 +54,7 @@ const getBlogs = async function (req, res) {
 
     }
   } catch (err) {
-    res.status(404).send({ status: false, error: error.message });
+    res.status(500).send({ status: false, error: error.message });
   }
 };
 
@@ -78,10 +78,8 @@ const deleteBlogsWithId = async function (req, res) {
     const blogId = req.params.blogId;
     const blogDetail = await blogModel.findById(blogId);
     if (blogDetail && blogDetail.isDeleted == false) {
-      //data["publishedAt"]=new Date();
-      //blogDetail["deletedAt"]=new Data(); 
-      //let deletedBlog=await blogModel.findOneAndUpdate({_id:blogId},{isDeleted:true,deletedAt:new Date()},{new:true});
-      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true });
+      
+      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true,deletedAt:new Date() }, { new: true });
 
       res.status(200).send({ status: true, data: deletedBlog });
     } else {
@@ -99,7 +97,7 @@ const deleteBlogsWithId = async function (req, res) {
 //----------------------------6th-DELETE BLOG WITH QUERY------------------------------------------------------------
 const deleteBlogsWithQuery = async function (req, res) {
   try {
-    const irs = await blogModel.find({ isdeleted: false });
+    const irs = await blogModel.find({ isDeleted: false });
     if (irs) {
       let authorId = req.query.authorId;
       let cat = req.query.category;
@@ -110,7 +108,7 @@ const deleteBlogsWithQuery = async function (req, res) {
       for (let i = 0; i < irs.length; i++) {
         if (irs[i].authorId == authorId || irs[i].category.filter(x => x == cat) == cat || irs[i].tags.filter(x => x == tag) == tag || irs[i].subcategory.filter(x => x == sub) == sub) {// || irs[i].category == category || irs[i].tags == tags){
           //arr.push(irs[i]);
-          arr= await blogModel.findAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true });
+          arr= await blogModel.findAndUpdate({ _id : irs[i]["_id"] }, { isDeleted: true }, { new: true });
         }
       }
       res.status(200).send({ status: true, data: arr });
