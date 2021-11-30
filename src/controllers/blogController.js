@@ -31,7 +31,7 @@ const createBlogs = async function (req, res) {
 
 
 
-//-----------------------3 rd-GET BLOGS LIST----------------------------------------------------------
+//-----------------------3 rd-GET BLOGS LIST-----------------------------------
 
 const getBlogs = async function (req, res) {
   try {
@@ -48,38 +48,50 @@ const getBlogs = async function (req, res) {
         }
       }
       res.status(200).send({ status: true, data: arr });
-    }
-    else {
+     } else {
       res.status(404).send({ status: false, msg: "No blogs found" });
-
     }
-  } catch (err) {
+  }catch(error) {
     res.status(500).send({ status: false, error: error.message });
   }
 };
 
 
 
-//-----------------------------4rth- UPDATE BLOG--------------------------------------------------
+//-----------------------------4rth- UPDATE BLOG-------------------------------------
 const updateBlog = async function (req, res) {
   try {
 
+    let blogId = req.params.blogId
+    let newTitle = req.body.title
+    let newBody = req.body.body
+    let newTags = req.body.tags
+    let newSubCategory = req.body.subCategory
+  
+    let data = await blogModel.findOne({ _id: blogId })
 
-  } catch (error) {
+    if (data.isDeleted == false && data) {
+      let updatedata = await blogModel.findOneAndUpdate({ _id: blogId }, { title: newTitle, body: newBody, tags: newTags, subCategory: newSubCategory, publishedAt: new Date(), isPublished: true }, { new: true });
+      res.status(200).send({ msg: "successfully updated", data: updatedata })
+    }
+    else {
+      res.status(404).send({ msg: "data not found" })
+    }
+
+  }catch(error) {
     res.status(500).send({ message: "failed", error: error.message })
   }
 };
 
 
-
-//---------------------------5th-DELETE BLOG WITH ID------------------------------------------------------
+//---------------------------------5th-DELETE BLOG WITH ID------------------------------------------------------------------------
 const deleteBlogsWithId = async function (req, res) {
   try {
     const blogId = req.params.blogId;
     const blogDetail = await blogModel.findById(blogId);
     if (blogDetail && blogDetail.isDeleted == false) {
-      
-      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true,deletedAt:new Date() }, { new: true });
+
+      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: new Date() }, { new: true });
 
       res.status(200).send({ status: true, data: deletedBlog });
     } else {
@@ -94,24 +106,30 @@ const deleteBlogsWithId = async function (req, res) {
 
 
 
-//----------------------------6th-DELETE BLOG WITH QUERY------------------------------------------------------------
+//----------------------------6th-DELETE BLOG WITH QUERY-----------------------------------------------------------------------------
 const deleteBlogsWithQuery = async function (req, res) {
   try {
+    let deletedBlog;
     const irs = await blogModel.find({ isDeleted: false });
+    console.log(irs);
     if (irs) {
+
       let authorId = req.query.authorId;
       let cat = req.query.category;
       let tag = req.query.tags;
       let pub = req.query.isPublished;
       let sub = req.query.subcategory;
-      //let arr = [];
+
       for (let i = 0; i < irs.length; i++) {
-        if (irs[i].authorId == authorId || irs[i].category.filter(x => x == cat) == cat || irs[i].tags.filter(x => x == tag) == tag || irs[i].subcategory.filter(x => x == sub) == sub) {// || irs[i].category == category || irs[i].tags == tags){
-          //arr.push(irs[i]);
-          arr= await blogModel.findAndUpdate({ _id : irs[i]["_id"] }, { isDeleted: true }, { new: true });
+        if (irs[i].authorId == authorId || irs[i].category.filter(x => x == cat) == cat || irs[i].tags.filter(x => x == tag) == tag || irs[i].subcategory.filter(x => x == sub) == sub || irs[i].isPublished == pub) {
+          deletedBlog = await blogModel.findOneAndUpdate({ _id: irs[i]["_id"] }, { isDeleted: true, deletedAt: new Date() }, { new: true });
         }
       }
-      res.status(200).send({ status: true, data: arr });
+    }
+    if (deletedBlog) {
+
+
+      res.status(200).send({ status: true, data: deletedBlog });
     }
     else {
       res.status(404).send({ status: false, msg: "No blogs found" });
@@ -119,7 +137,7 @@ const deleteBlogsWithQuery = async function (req, res) {
   } catch (error) {
     res.status(500).send({ message: "failed", error: error.message })
   }
-};
+}
 
 
 module.exports.createBlogs = createBlogs;
@@ -138,58 +156,6 @@ module.exports.deleteBlogsWithQuery = deleteBlogsWithQuery;
 //----------------------------------------------------------------------------------------
 
 
-/**
- const express = require('express');
-const data = require('./data');
-
-// Initialize App
-const app = express();
-
-// Assign route
-app.use('/', (req, res, next) => {
-res.send('Node.js Search and Filter');
-});
-
-// Start server on PORT 5000
-app.listen(5000, () => {
-console.log('Server started!');
-});
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //problem 2
-// const createBook = async function (req, res) {
-//   const book = req.body;
-//   const authorId = req.body.author
-//   const publisherId = req.body.publisher
-//   const aId = await authorModel.findById(authorId)
-//   const pId = await publisherModel.findById(publisherId)
-
-
-//   if (aId) {
-//     if(pId){
-//       let savedBook = await bookModel.create(book);
-//       res.send({ msg: savedBook });
-//     }else{
-//       res.send({msg:"Publisher id is not valid"})
-//     }
-//   } else {
-//     res.send({ msg: "Author id is not valid" });
-//   }
-// };
 
 // //problem 3 and 5
 // const getBooks = async function (req, res) {
@@ -203,5 +169,6 @@ console.log('Server started!');
 
 // module.exports.createBook = createBook;
 // module.exports.getBooks = getBooks;
+
 
 

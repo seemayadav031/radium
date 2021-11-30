@@ -1,13 +1,13 @@
-const AuthorModel= require("../models/authorModel.js")
+const authorModel= require("../models/authorModel.js")
 
 //------------------------------------------------------------------------------------------
 
 
-//-------------------------------1st-CREATE AUTHOR--------------------------------------------------------
+//-------------------------------1st-CREATE AUTHOR------------------------------------------
 const createAuthor= async function (req, res){
 try{
     let data= req.body
-    let savedData= await AuthorModel.create(data);
+    let savedData= await authorModel.create(data);
     res.status(201).send({status:true,data: savedData});
 }catch(error){
     res.status(500).send({message:"failed",error:error.message});
@@ -15,7 +15,7 @@ try{
 };
 
 
-module.exports.createAuthor= createAuthor
+module.exports.createAuthor= createAuthor;
 
 
 
