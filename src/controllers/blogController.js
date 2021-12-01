@@ -166,7 +166,11 @@ const deleteBlogsWithQuery = async function (req, res) {
           await blogModel.findOneAndUpdate({ _id: blog[i]._id }, { isDeleted: true, deletedAt: new Date() });
         }
       }
-      return res.status(200).send({ status: true })
+      if(blog.length>0){
+            return res.status(200).send({ status: true })
+      }else{
+            return res.status(404).send({ status: false ,msg:"blog not found"})
+      }
     }
 
   } catch (error) {
@@ -205,7 +209,14 @@ module.exports.deleteBlogsWithQuery = deleteBlogsWithQuery;
 
 
 
+//-----------------extra-----------------
+const getBlogDetails = async function (req, res) {
+  let list = await blogModel.find()
+  res.send({ data: list })
+}
 
+
+module.exports.getBlogDetails = getBlogDetails
 
 
 

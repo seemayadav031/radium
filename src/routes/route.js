@@ -25,7 +25,9 @@ router.post('/login',  AuthorController.login );
 // router.delete('/mblogs/:blogId', middleware.checkAuthentication, BlogController.midDeleteBlogsWithId );
 
 
-
+//-----------------------------extra api---------------------------------------------------------------------
+router.get('/getAuthors',  AuthorController.getAuthors );
+router.get('/getBlogDetails',  BlogController.getBlogDetails );
 
 module.exports = router;
 

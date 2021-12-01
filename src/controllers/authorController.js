@@ -64,7 +64,13 @@ module.exports= {createAuthor,login};
 
 
 
+//-------------extra------------------
+const getAuthors= async function (req, res) {
+  let allAuthors= await authorModel.find()
+  res.send({data: allAuthors})
+}
 
+module.exports.getAuthors= getAuthors
 
 
 
