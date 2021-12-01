@@ -25,7 +25,7 @@ const login = async function (req, res) {
   
     if (credentials) {
       let payload = { authorId: credentials._id }
-      let token = jwt.sign(payload, "radiumIrs")
+      let token = jwt.sign(payload, "radiumIrs")                                   //token generation
       res.status(200).send({ status: true, data: credentials._id, token: token })
     } else {
       res.status(400).send({ msg: "Invalid credentials " })
@@ -35,9 +35,9 @@ const login = async function (req, res) {
   }
   };
 
-module.exports.createAuthor= createAuthor;
-module.exports.login= login;
-;
+module.exports= {createAuthor,login};
+
+
 
 
 
@@ -69,22 +69,3 @@ module.exports.login= login;
 
 
 
-
-
-
-
-// //problem 1
-// const createAuthor= async function (req, res) {
-//     var data= req.body
-//     let savedData= await authorModel.create(data)
-//     res.send({msg: savedData})    
-// }
-
-
-const getAuthors= async function (req, res) {
-    let allAuthors= await authorModel.find()
-    res.send({data: allAuthors})
-}
-
-// module.exports.createAuthor= createAuthor
- module.exports.getAuthors= getAuthors

@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-const validation = async function(req,res,next){
+//-----------------------phase 1-EMAIL VALIDATION---------------------------------------------------------------
+const emailValidation = async function(req,res,next){
     let data = req.body.email
     if(data) {
-        const validEmail = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/;
+        const validEmail = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/;  //validating email through rgexp
        if(data.match(validEmail)){
           next();
 
@@ -15,13 +16,15 @@ const validation = async function(req,res,next){
     }
 };
 
+
+//---------------------------phase 2-AUTHENTICATION CHECK--------------------------------------------------------------
 const checkAuthentication= function (req, res, next) {
     try{
-    let token=req.headers["x-api-key"]
+    let token=req.headers["x-api-key"]                            //header check
     if(token){
-        let decodedToken=jwt.verify(token,"radiumIrs")
+        let decodedToken=jwt.verify(token,"radiumIrs")            //validating token
         if(decodedToken){
-                req.validToken=decodedToken
+                req.validToken=decodedToken                       //making accessible for protected api
                 next()
         }else{
             res.status(401).send({msg:"token is not verified"})
@@ -38,6 +41,5 @@ const checkAuthentication= function (req, res, next) {
 
 
 
-module.exports.checkAuthentication= checkAuthentication
-module.exports={validation}
+module.exports={emailValidation,checkAuthentication}
 
