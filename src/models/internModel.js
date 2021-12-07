@@ -26,7 +26,7 @@ const internSchema = new mongoose.Schema({
         required: 'Intern mobile number is required',
         validate: {
             validator: function (mobile) {
-                return /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(mobile)
+                return /^[6-9]\d{9}$/.test(mobile)
             }, message: 'Please fill a valid mobile number', isAsync: false
         },
         unique: true
@@ -43,7 +43,7 @@ const internSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-module.exports = mongoose.model('Intern', internSchema, 'interns')
+module.exports = mongoose.model('intern', internSchema, 'interns')
 
 
 

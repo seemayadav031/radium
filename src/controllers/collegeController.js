@@ -1,13 +1,14 @@
 const collegeModel = require('../models/collegeModel')
 //const jwt = require('jsonwebtoken')
 
+//for field of request
 const isValid = function(value) {
     if(typeof value === 'undefined' || value === null) return false
     if(typeof value === 'string' && value.trim().length === 0) return false
     return true;
 }
 
-
+//for request body
 const isValidRequestBody = function(requestBody) {
     return Object.keys(requestBody).length > 0
 }
@@ -31,8 +32,9 @@ const registerCollege = async function (req, res) {
              res.status(400).send({status: false, message: 'College Short name is required'})
              return
          }
-
-         const isNameAlreadyUsed = await collegeModel.findOne({name}); // {logoLink: logoLink} object shorthand property
+        
+         //checking for uniqueness
+         const isNameAlreadyUsed = await collegeModel.findOne({name}); // {name: name} object shorthand property
 
          if(isNameAlreadyUsed) {
              res.status(400).send({status: false, message: `${name}  is already registered`})
@@ -44,12 +46,21 @@ const registerCollege = async function (req, res) {
              return
          }
 
+         //checking for uniqueness
+         const isFullNameAlreadyUsed = await collegeModel.findOne({fullName}); // {fullName: fullName} object shorthand property
+
+         if(isFullNameAlreadyUsed) {
+             res.status(400).send({status: false, message: `${fullName}  is already registered with college short name ${isFullNameAlreadyUsed.name} `})
+             return
+         }
+
 
          if(!isValid(logoLink)) {
              res.status(400).send({status: false, message: `logo link  is required`})
              return
          }
         
+         //for validation
          if(!(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi.test(logoLink))) {
              res.status(400).send({status: false, message: `link should be a valid link address`})
              return
@@ -64,7 +75,7 @@ const registerCollege = async function (req, res) {
          }
          // Validation ends
 
-         const collegeData = {name, fullName, logoLink}
+         const collegeData = {name, fullName, logoLink,isDeleted}
          const newCollege = await collegeModel.create(collegeData);
 
          res.status(201).send({status: true, message: `College created successfully`, data: newCollege});
@@ -76,6 +87,10 @@ const registerCollege = async function (req, res) {
 module.exports.registerCollege = registerCollege;
 
 
+
+
+
+//---------Extra-----------------------------------
 const getCollegeDetal = async function (req, res) {
     let allUser = await collegeModel.find();
     res.send({ msg: allUser });

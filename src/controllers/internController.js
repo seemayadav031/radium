@@ -38,10 +38,8 @@ const registerIntern = async function (req, res) {
         const email = req.body.email;
         const mobile = req.body.mobile;
         const collegeName = req.body.collegeName;
+        const isDeleted= req.body.isDeleted?req.body.isDeleted:false;
 
-        //Extract collegeId from collegeName
-        const x = await collegeModel.findOne({ name: collegeName })
-        const collegeId = x._id;
 
         // Validation starts
         if (!isValid(name)) {
@@ -49,6 +47,21 @@ const registerIntern = async function (req, res) {
             return
         }
 
+        if (!isValid(collegeName)) {
+            res.status(400).send({ status: false, message: 'Intern college name is required' })
+            return
+        }
+
+        //Extract collegeId from collegeName
+        const x = await collegeModel.findOne({ name: collegeName ,isDeleted:false})
+        
+        
+        if (!x) {
+             res.status(400).send({ status: false, message: `College does not exit` })
+             return
+        }
+        
+         const collegeId = x._id;
 
         if (!isValid(collegeId)) {
             res.status(400).send({ status: false, message: 'College id is required' })
@@ -59,6 +72,7 @@ const registerIntern = async function (req, res) {
             res.status(400).send({ status: false, message: `${collegeId} is not a valid college id` })
             return
         }
+    
 
 
 
@@ -84,12 +98,12 @@ const registerIntern = async function (req, res) {
             return
         }
 
-        if (!(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(mobile))) {
+        if (!(/^[6-9]\d{9}$/.test(mobile))) {
             res.status(400).send({ status: false, message: `Mobile number should be a valid number` })
             return
         }
 
-        const isMobileAlreadyUsed = await internModel.findOne({ mobile }); // {logoLink: logoLink} object shorthand property
+        const isMobileAlreadyUsed = await internModel.findOne({ mobile }); // {mobile: mobile} object shorthand property
 
         if (isMobileAlreadyUsed) {
             res.status(400).send({ status: false, message: `${mobile} number is already registered` })
@@ -97,21 +111,14 @@ const registerIntern = async function (req, res) {
         }
 
 
-        const college = await collegeModel.findById(collegeId);
-
-        if (!college) {
-            res.status(400).send({ status: false, message: `College does not exit` })
-            return
-        }
-        // Validation ends
-
-
+        
 
         const internData = {
             name,
             email,
             mobile,
             collegeId,
+            isDeleted
         }
 
         const newIntern = await internModel.create(internData)
@@ -129,18 +136,16 @@ const collegeDetails = async function (req, res) {
     try {
         const Query = {}
         const queryParamss = req.query
-        const x = await collegeModel.findOne({ name: req.query.collegeName })
-        const collegeId = x._id;
-
         if (!isValidRequestBody(queryParamss)) {
             res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide college name' })
             return
         }
+        const x = await collegeModel.findOne({ name: req.query.collegeName,isDeleted:false })
 
         if (isValidRequestBody(queryParamss) && x != null) {
             const name = req.query.collegeName
             Query['name'] = name
-
+            const collegeId = x._id;
             if (isValid(collegeId) && isValidObjectId(collegeId)) {
                 Query['fullName'] = x.fullName
                 Query['logoLink'] = x.logoLink
@@ -151,7 +156,8 @@ const collegeDetails = async function (req, res) {
             return
         }
 
-        const intrests = await internModel.find({ collegeId: collegeId }).select({ name: 1, email: 1, mobile: 1 })
+        const collegeId = x._id;
+        const intrests = await internModel.find({ collegeId: collegeId ,isDeleted:false }).select({ name: 1, email: 1, mobile: 1 })
         Query['intrests'] = intrests
 
         if (Array.isArray(intrests) && intrests.length === 0) {
@@ -172,6 +178,8 @@ module.exports.registerIntern = registerIntern
 module.exports.collegeDetails = collegeDetails
 
 
+
+//------------Extra-----------------------------
 const getIntern = async function (req, res) {
     let allUser = await internModel.find();
     res.send({ msg: allUser });
