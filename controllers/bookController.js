@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
 const bookModels = require("../models/bookModel");
 const reviewModel = require('../models/reviewModel')
+const mongoose = require('mongoose')  // change -- add this
 const { findOne, findOneAndUpdate } = require("../models/userModel");
 
 // ================================================================================================================================================//
@@ -15,6 +16,10 @@ const isValid = function (value) {
 
 const isValidRequestBody = function (requestBody) {
   return Object.keys(requestBody).length > 0
+}
+
+const isValidObjectId = function(objectId) { // change -- add this validation to check object id type
+  return mongoose.Types.ObjectId.isValid(objectId)
 }
 
 
@@ -41,6 +46,15 @@ const createBook = async function (req, res) {
       res.status(400).send({ status: false, message: ' excerpt is required' })
       return
     }
+    if (!isValid(requestBody.userId)) {   // change -- add isvalid function for user id
+      res.status(400).send({ status: false, message: ' user id is required' })
+      return
+    }
+
+    if(!isValidObjectId(requestBody.userId)) {       // change -- add this function
+      res.status(400).send({status: false, message: `${requestBody.userId} is not a valid user id`})
+      return
+  }
 
     if (!isValid(requestBody.ISBN)) {
       res.status(400).send({ status: false, message: ' ISBN is required' })
@@ -62,8 +76,9 @@ const createBook = async function (req, res) {
     }
 
     if(!(req.validToken._id == requestBody.userId)){
-      return res.statu(400).send({status:false,message:'unauthorized access'})
+      return res.status(400).send({status:false,message:'unauthorized access'})
    }
+   
 
 
 
@@ -77,12 +92,12 @@ const createBook = async function (req, res) {
       return res.status(400).send({ status: false, msg: "title already exist" })
     }
 
-    let ISBNCheck = await userModel.findOne({ ISBN: requestBody.ISBN })
-    if (!ISBNCheck) {
+    let ISBNCheck = await bookModels.findOne({ ISBN: requestBody.ISBN }) //change -- ISBN in book model not in user model
+    if (ISBNCheck) {       //change -- remove ! sign from here
       return res.status(400).send({ status: false, msg: "ISBN already exist" })
     }
 
-    requestBody.deletedAt = requestBody.isDeleted === true ? Date() : null
+    requestBody.deletedAt = requestBody.isDeleted === true ? Date() : ''   //null
 
     let savedBook1 = await bookModels.create(requestBody);
 
@@ -263,3 +278,14 @@ module.exports.getBooks = getBooks;
 module.exports.getBooksBYId = getBooksBYId;
 module.exports.updateBooksBYId = updateBooksBYId;
 module.exports.deleteBooksBYId = deleteBooksBYId;
+
+
+
+
+
+const getBookDetail = async function (req, res) {
+  let allUser = await bookModels.find();
+  res.send({ msg: allUser });
+};
+
+module.exports.getBookDetail = getBookDetail;

@@ -24,7 +24,7 @@ const authentication = function (req, res, next) {
 
         } else {
             res.status(401).send({ status: false, msg: "request is missing a mandatory token header" })
-        }
+        } 
 
     } catch (error) {
 

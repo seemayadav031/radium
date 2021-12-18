@@ -15,7 +15,9 @@ const isValidRequestBody = function (requestBody) {
     return Object.keys(requestBody).length > 0
 }
 
-
+const isValidTitle = function(title) {   //change--- add this function
+    return ['Mr', 'Mrs', 'Miss'].indexOf(title) !== -1
+}
 
 //------------------------------------------------------------------------------------------------------------------------------//
 
@@ -26,11 +28,16 @@ const createuser = async function (req, res) {
         let requestBody = req.body
 
         if (!isValidRequestBody(requestBody)) {
-            res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide author details' })
+            res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide user details' }) //change -- write user instead of author
             return
         }
         if (!isValid(requestBody.title)) {
             res.status(400).send({ status: false, message: 'title is required' })
+            return
+        }
+
+        if(!isValidTitle(requestBody.title.trim())) {  //change--add this function and use trim()
+            res.status(400).send({status: false, message: `Title should be among Mr, Mrs and Miss`})
             return
         }
 
@@ -51,6 +58,10 @@ const createuser = async function (req, res) {
             res.status(400).send({ status: false, message: 'password is required' })
             return
         }
+        if (!(requestBody.password.length >= 8 && requestBody.password.length <= 15)) {
+            res.status(400).send({ status: false, message: 'password length should be greter then 8 and less than 15' })
+            return
+        }
         if (!isValid(requestBody.address)) {
             res.status(400).send({ status: false, message: 'address is required' })
             return
@@ -60,7 +71,7 @@ const createuser = async function (req, res) {
             return
         }
 
-        if (!(validator.isEmail(requestBody.email))) {
+        if (!(validator.isEmail(requestBody.email.trim()))) {   //change -- add trim() otherwise say invalid email
             return res.status(400).send({ status: false, msg: 'enter valid email' })
         }
 
@@ -71,10 +82,10 @@ const createuser = async function (req, res) {
             return
         }
 
-        const isNumberAlreadyUsed = await userModels.findOne({ email: requestBody.phone });
+        const isNumberAlreadyUsed = await userModels.findOne({ phone: requestBody.phone }); //change -- write phone istead email
 
         if (isNumberAlreadyUsed) {
-            res.status(400).send({ status: false, message: `${requestBody.phone} number is already registered` })
+            res.status(400).send({ status: false, message: `${requestBody.phone.trim()} number is already registered` }) //change -- add trim()
             return
         }
 
@@ -111,7 +122,7 @@ const doLogin = async function (req, res) {
 
             let payload = { _id: user._id }
 
-            let token = jwt.sign(payload, 'projectfourth', { expiresIn: '1800s' })
+            let token = jwt.sign(payload, 'projectfourth', { expiresIn: '1h' })
 
             res.header('x-api-key', token);
 
@@ -130,3 +141,17 @@ const doLogin = async function (req, res) {
 
 module.exports.createuser = createuser;
 module.exports.doLogin = doLogin;
+
+
+
+
+
+
+
+//// extra
+const getUserDetail = async function (req, res) {
+    let allUser = await userModels.find();
+    res.send({ msg: allUser });
+  };
+
+  module.exports.getUserDetail = getUserDetail;

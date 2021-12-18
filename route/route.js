@@ -12,6 +12,8 @@ router.post('/register',userController.createuser)
 
 router.post('/login',userController.doLogin)
 
+router.get('/getUserDetail',userController.getUserDetail)
+
 
 // ================ books api =========================================================================================//
 
@@ -26,7 +28,7 @@ router.put('/books/:bookId',middleware.authentication,bookController.updateBooks
 
 router.delete('/books/:bookId',middleware.authentication,bookController.deleteBooksBYId)
 
-
+router.get('/getBookDetail',bookController.getBookDetail)
 // ======================review apis ===================================================================================//
 
 
