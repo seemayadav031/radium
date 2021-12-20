@@ -14,14 +14,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const mongoose = require('mongoose');
 const { response } = require('express');
 
-// mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/group_2ssak_project_4?authSource=admin&replicaSet=atlas-e7145j-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true")
-//     .then(() => console.log('mongodb running on 27017'))
-//     .catch(err => console.log(err))
-
-
-mongoose.connect("mongodb+srv://monty-python:SnYUEY4giV9rekw@functionup-backend-coho.0zpfv.mongodb.net/seema_yadav_db?retryWrites=true&w=majority", { useNewUrlParser: true })
-    .then(() => console.log('mongodb running and connected'))
+mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/group_2ssak_project_4?authSource=admin&replicaSet=atlas-e7145j-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true")
+    .then(() => console.log('mongodb running on 27017'))
     .catch(err => console.log(err))
+
+
+// mongoose.connect("mongodb+srv://monty-python:SnYUEY4giV9rekw@functionup-backend-coho.0zpfv.mongodb.net/seema_yadav_db?retryWrites=true&w=majority", { useNewUrlParser: true })
+//     .then(() => console.log('mongodb running and connected'))
+//     .catch(err => console.log(err))
 
 app.use('/', route);
 

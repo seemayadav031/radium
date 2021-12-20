@@ -132,11 +132,12 @@ const getBooks = async function (req, res) {
     if (isValid(req.query.userId)) {
       filterObject.userId =req.query.userId
     }
-
+    if(req.query.userId){
     if(!isValidObjectId(req.query.userId)) {       // change -- add this function
       res.status(400).send({status: false, message: `${req.query.userId} is not a valid user id`})
       return
   }
+}
 
     if (isValid(req.query.category)) {
       filterObject.category =req.query.category
@@ -154,7 +155,21 @@ const getBooks = async function (req, res) {
     if (search.length == 0) {
        return res.status(404).send({ status: false, message:" no book with this combination found" })
     }
-      
+     
+    
+    //let v=
+    search.sort((a, b) => {
+      let fa = a.title.toLowerCase(),
+          fb = b.title.toLowerCase();
+  
+      if (fa < fb) {
+          return -1;
+      }
+      if (fa > fb) {
+          return 1;
+      }
+      return 0;
+  });
 
     res.status(200).send({ status: true, message:"Book list", data:search}) 
 
@@ -190,7 +205,7 @@ const getBooksBYId = async function (req, res) {
     const reviewsData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, rating:1, review: 1, releasedAt: 1 });;
     
     // bookDetail kaise hatayein from response
-    res.status(200).send({ status: true, message: 'Books list', data: {bookDetail,reviewsData}});
+    res.status(200).send({ status: true, message: 'Books list', data: {...bookDetail.toObject(),reviewsData}});
 
   } catch (error) {
 

@@ -70,7 +70,7 @@ const createReview = async function (req, res) {
     requestBody.reviewedAt = new Date()
     requestBody.bookId = req.params.bookId
     requestBody.reviewedBy = requestBody.reviewedBy?requestBody.reviewedBy:'Guest';
-
+    
 
 
     let create = await reviewModel.create(requestBody);
@@ -143,6 +143,10 @@ const updateReview = async function (req, res) {
     
     if (requestBody.rating && typeof requestBody.rating === 'number' && requestBody.rating >= 1 && requestBody.rating <= 5) {
       updateData.rating = requestBody.rating
+    }
+    
+    if(!(requestBody.rating >= 1 && requestBody.rating <= 5)){
+      return res.status(400).send({status:false, message: "rating should be in range 1 to 5 "})
     }
 
     // kya hum rating ke liye kuch karna hai like yeh update toh nahi kar raha wahi rakh raha hain ,kya hume range batani hai

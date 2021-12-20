@@ -50,6 +50,16 @@ const createuser = async function (req, res) {
             res.status(400).send({ status: false, message: 'phone  is required' })
             return
         }
+
+        let check1 = requestBody.phone
+
+        let check2 = (/^[0-9]{10}/.test(requestBody.phone)) 
+
+        if (!(check1.length === 10 && check2)) { 
+            return res.status(400).send({ status: false, msg: 'enter valid number' })
+         }
+
+
         if (!isValid(requestBody.email)) {
             res.status(400).send({ status: false, message: 'email is required' })
             return
@@ -62,14 +72,30 @@ const createuser = async function (req, res) {
             res.status(400).send({ status: false, message: 'password length should be greter then 8 and less than 15' })
             return
         }
-        if (!isValid(requestBody.address)) {
-            res.status(400).send({ status: false, message: 'address is required' })
+    
+   if(requestBody.address){
+        if (!isValid(requestBody.address.street)) {
+            res.status(400).send({ status: false, message: 'street is required' })
             return
         }
+        
+        if (!isValid(requestBody.address.city)) {
+            res.status(400).send({ status: false, message: 'city is required' })
+            return
+        } 
+        
+        if (!isValid(requestBody.address.pincode)) {
+            res.status(400).send({ status: false, message: 'pincode is required' })
+            return
+        }
+
         if (Object.keys(requestBody.address).length === 0) {
             res.status(400).send({ status: false, message: 'address cant be empty' })
             return
         }
+    }
+
+        
 
         if (!(validator.isEmail(requestBody.email.trim()))) {   //change -- add trim() otherwise say invalid email
             return res.status(400).send({ status: false, msg: 'enter valid email' })

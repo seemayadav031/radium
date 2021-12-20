@@ -1,36 +1,73 @@
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 
-const authentication = function (req, res, next) {
-    try {
+// const authentication = function (req, res, next) {
+//     try {
 
-        let token = req.headers["x-auth-token"]
+//         let token = req.headers["x-auth-token"]
 
-        if (token) {
+//         if (token) {
 
-            let decodedToken = jwt.verify(token, "projectfourth")
+//             let decodedToken = jwt.verify(token, "projectfourth")
 
-            if (decodedToken) {
+//             if (decodedToken) {
 
-                req.validToken = decodedToken
+//                 req.validToken = decodedToken
 
-                next()
+//                 next()
 
-            } else {
+//             } else {
 
-                res.status(401).send({ msg: "token is not verified" })
+//                 res.status(401).send({ msg: "token is not verified" })
 
-            }
+//             }
 
-        } else {
-            res.status(401).send({ status: false, msg: "request is missing a mandatory token header" })
+//         } else {
+//             res.status(401).send({ status: false, msg: "request is missing a mandatory token header" })
+//         } 
+
+//     } catch (error) {
+
+//         res.status(500).send({ status: false, msg: error.message })
+
+//     }
+// }
+
+// module.exports.authentication = authentication
+
+
+
+
+
+const jwt = require('jsonwebtoken')
+
+const authentication = async function (req, res, next) {
+    
+    try { 
+        
+        const token = req.headers['x-auth-token']
+        
+        if (!token) {
+            
+            res.status(400).send({ status: false, msg: "request is missing a mandatory token header" })
+        
         } 
-
+        
+        const decodedToken = jwt.verify(token, 'projectfourth')
+        
+        if (!decodedToken) {
+            
+            res.status(400).send({ status: false, msg: "user not found" })
+        
+        } 
+        
+        req.validToken = decodedToken
+        
+        next() 
+    
     } catch (error) {
-
-        res.status(500).send({ status: false, msg: error.message })
-
+        
+        res.status(400).send({ status: false, msg: error }) }
+    
     }
-}
-
-module.exports.authentication = authentication
+module.exports.authentication = authentication;
