@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId
 const bookSchema = new mongoose.Schema({
 
+  bookCover:{                  //add for aws sdk
+    type:String
+  },
+
   title: {
     type: String,
     required: true,
